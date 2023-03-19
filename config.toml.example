@@ -1,0 +1,19 @@
+# List of additional addresses to notify.
+to_addresses = ["example@example.com"]
+
+[services."Very Important Service"]
+# HTTP endpoint to test.
+http_endpoint = "https://service.example.com"
+# Email address to send notification to.
+email = "service-specific-email@example.org"
+
+[email]
+# Address of SMTP server to send with.
+smtp_address = "smtp.example.com"
+
+# Credentials for SMTP server.
+smtp_username = "SMTPUSERNAME"
+smtp_password = "SMTPPASSWORD"
+
+# Address for the emails to be sent from.
+from_address = "Service Email <no-reply@example.com>"
