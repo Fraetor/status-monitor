@@ -9,7 +9,7 @@ otherwise.
 
 - [Python](https://www.python.org) 3.11 or newer.
 - [Requests](https://requests.readthedocs.io/)
-- An SMTP server to send with. I use [AWS SES](https://aws.amazon.com/ses/).
+- An SMTP server to send with. I use [Amazon SES](https://aws.amazon.com/ses/).
 
 ## Usage
 
