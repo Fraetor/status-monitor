@@ -11,7 +11,7 @@ with open("config.toml", "rb") as fp:
 
 # Unix key-value database thing. Interface is dictionary like, but it only
 # stores bytes.
-with dbm.open("status.db", "c") as db:
+with dbm.open("status.dbm", "c") as db:
     services = config["services"]
     for service_name in services:
         service = services[service_name]
