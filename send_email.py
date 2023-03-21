@@ -2,6 +2,7 @@
 import smtplib
 import ssl
 from email.message import EmailMessage
+import typing
 import tomllib
 
 
@@ -12,7 +13,7 @@ with open("config.toml", "rb") as fp:
 tls_context = ssl.create_default_context()
 
 
-def send_email(to: str | list[str], subject: str, body: str) -> None:
+def send_email(to: typing.Union[str, typing.List[str]], subject: str, body: str) -> None:
     # Allow for an address not in a list.
     if type(to) == str:
         to = [to]
