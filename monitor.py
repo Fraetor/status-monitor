@@ -58,7 +58,7 @@ async def main():
     # stores bytes.
     with dbm.open("status.dbm", "c") as db:
         async_funcs = [test_service(db, config, sn) for sn in config["services"]]
-        asyncio.wait(async_funcs)
+        await asyncio.wait(async_funcs)
 
 
 if __name__ == "__main__":
