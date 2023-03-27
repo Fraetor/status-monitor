@@ -57,7 +57,7 @@ async def main():
     # Unix key-value database thing. Interface is dictionary like, but it only
     # stores bytes.
     with dbm.open("status.dbm", "c") as db:
-        async_funcs = (test_service(db, config, sn) for sn in config["services"])
+        async_funcs = [test_service(db, config, sn) for sn in config["services"]]
         await asyncio.gather(async_funcs)
 
 
