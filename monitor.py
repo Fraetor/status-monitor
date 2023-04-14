@@ -17,8 +17,8 @@ async def http_check(http_endpoint) -> tuple[str, str]:
     if r.status_code == requests.codes.ok:
         status = "UP"
     else:
-        # Recheck after 30 seconds to ensure not a false positive.
-        asyncio.sleep(30)
+        # Recheck after 60 seconds to ensure not a false positive.
+        asyncio.sleep(60)
         r = requests.get(http_endpoint)
         if r.status_code == requests.codes.ok:
             status = "UP"
