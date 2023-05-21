@@ -12,25 +12,31 @@ except ModuleNotFoundError:
     import tomli as tomllib
 
 
+def check_get(http_endpoint: str) -> bool:
+    try:
+        r = requests.get(http_endpoint)
+    except ConnectionError:
+        return False
+    return r.status_code == requests.codes.ok
+
+
 async def http_check(http_endpoint) -> tuple[str, str]:
-    r = requests.get(http_endpoint)
-    if r.status_code == requests.codes.ok:
+    if check_get(http_endpoint):
         status = "UP"
     else:
         # Recheck after 120 seconds to ensure not a false positive.
         asyncio.sleep(120)
-        r = requests.get(http_endpoint)
-        if r.status_code == requests.codes.ok:
+        if check_get(http_endpoint):
             status = "UP"
         else:
             status = "DOWN"
-    return status, f"{r.status_code} {responses[r.status_code]}"
+    return status
 
 
 async def test_service(db, config, service_name):
     services = config["services"]
     service = services[service_name]
-    status, reason = await http_check(service["http_endpoint"])
+    status = await http_check(service["http_endpoint"])
     try:
         old_status = db[service_name].decode()
     except KeyError:
@@ -43,9 +49,7 @@ async def test_service(db, config, service_name):
         )
         body = f"""This is an automated monitoring email.
 
-At {timestamp} the status of {service_name} changed to {status}.
-It returned a status of {reason}.
-"""
+At {timestamp} the status of {service_name} changed to {status}."""
         send_email.send_email(service["email"], subject, body)
         send_email.send_email(config["to_addresses"], subject, body)
         db[service_name] = status
