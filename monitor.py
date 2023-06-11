@@ -63,10 +63,10 @@ def main():
     # stores bytes.
     with dbm.open("status.dbm", "c") as db:
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            futures = (
+            futures = [
                 executor.submit(test_service, db, config, service)
                 for service in config["services"]
-            )
+            ]
             concurrent.futures.wait(futures, return_when="ALL_COMPLETED")
 
 
