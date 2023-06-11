@@ -1,8 +1,9 @@
 #! /usr/bin/env python3
-import asyncio
+
 import dbm
 import datetime
-from http.client import responses
+import time
+import concurrent.futures
 import requests
 import send_email
 
@@ -14,18 +15,18 @@ except ModuleNotFoundError:
 
 def check_get(http_endpoint: str) -> bool:
     try:
-        r = requests.get(http_endpoint)
+        r = requests.get(http_endpoint, timeout=30)
     except ConnectionError:
         return False
     return r.status_code == requests.codes.ok
 
 
-async def http_check(http_endpoint) -> tuple[str, str]:
+def http_check(http_endpoint) -> tuple[str, str]:
     if check_get(http_endpoint):
         status = "UP"
     else:
-        # Recheck after 120 seconds to ensure not a false positive.
-        asyncio.sleep(120)
+        # Recheck after 60 seconds to ensure not a false positive.
+        time.sleep(60)
         if check_get(http_endpoint):
             status = "UP"
         else:
@@ -33,10 +34,10 @@ async def http_check(http_endpoint) -> tuple[str, str]:
     return status
 
 
-async def test_service(db, config, service_name):
+def test_service(db, config, service_name):
     services = config["services"]
     service = services[service_name]
-    status = await http_check(service["http_endpoint"])
+    status = http_check(service["http_endpoint"])
     try:
         old_status = db[service_name].decode()
     except KeyError:
@@ -55,15 +56,19 @@ At {timestamp} the status of {service_name} changed to {status}."""
         db[service_name] = status
 
 
-async def main():
+def main():
     with open("config.toml", "rb") as fp:
         config = tomllib.load(fp)
     # Unix key-value database thing. Interface is dictionary like, but it only
     # stores bytes.
     with dbm.open("status.dbm", "c") as db:
-        async_funcs = (test_service(db, config, sn) for sn in config["services"])
-        await asyncio.gather(*async_funcs)
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = (
+                executor.submit(test_service, db, config, service)
+                for service in config["services"]
+            )
+            concurrent.futures.wait(futures, return_when="ALL_COMPLETED")
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
