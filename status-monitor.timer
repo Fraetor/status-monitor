@@ -1,0 +1,10 @@
+[Unit]
+Description=Run status monitor every few minutes.
+Documentation=https://github.com/Fraetor/status-monitor
+
+[Timer]
+OnCalendar=5min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

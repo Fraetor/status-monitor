@@ -26,3 +26,6 @@ it every 5 minutes. For example:
 # Example crontab entry to run every 5 minutes.
 */5 * * * * /path/to/monitor.py /path/to/config.toml
 ```
+
+Systemd unit files for the service and timer are also included in the
+repository. The timer can be enabled to run the service.

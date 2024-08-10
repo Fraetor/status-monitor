@@ -1,0 +1,10 @@
+[Unit]
+Description=Status monitor to check on HTTP services.
+Documentation=https://github.com/Fraetor/status-monitor
+After=network-online.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=~/status-monitor
+ExecStart=./monitor.py config.toml
