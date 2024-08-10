@@ -139,6 +139,7 @@ def get_config() -> dict:
     parser.add_argument(
         "config", default="./config.toml", help="path to configuration file"
     )
+    parser.add_argument("database", default="./status.dbm", help="path to status database")
     args = parser.parse_args()
     try:
         with open(args.config, "rb") as fp:
@@ -146,16 +147,16 @@ def get_config() -> dict:
     except FileNotFoundError:
         print(f"ERROR: Config file not found: {args.config}", file=sys.stderr)
         sys.exit(1)
-    return configuration
+    return configuration, args.database
 
 
 def main():
     """Run status monitor once."""
-    config = get_config()
+    config, database_path = get_config()
     # dbm is Unix key-value database thing. Interface is dictionary like, but it
     # only stores bytes.
     emailer = Emailer(**config["email"])
-    with dbm.open("status.dbm", "c") as db, ThreadPoolExecutor() as executor:
+    with dbm.open(database_path, "c") as db, ThreadPoolExecutor() as executor:
         for service_name, service in config["services"].items():
             executor.submit(
                 test_service,

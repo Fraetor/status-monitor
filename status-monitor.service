@@ -6,5 +6,4 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-WorkingDirectory=/root/status-monitor
-ExecStart=./monitor.py config.toml
+ExecStart=/root/status-monitor/monitor.py /root/status-monitor/config.toml /root/status-monitor/status.dbm
