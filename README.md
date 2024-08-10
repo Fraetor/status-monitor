@@ -24,5 +24,5 @@ it every 5 minutes. For example:
 
 ```sh
 # Example crontab entry to run every 5 minutes.
-*/5 * * * * path/to/monitor.py
+*/5 * * * * /path/to/monitor.py /path/to/config.toml
 ```
