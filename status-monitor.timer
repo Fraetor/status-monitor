@@ -3,7 +3,7 @@ Description=Run status monitor every few minutes.
 Documentation=https://github.com/Fraetor/status-monitor
 
 [Timer]
-OnCalendar=5min
+OnCalendar=*:00/5:00
 Persistent=true
 
 [Install]
