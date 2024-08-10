@@ -1,6 +1,3 @@
-# List of additional addresses to notify.
-to_addresses = ["example@example.com"]
-
 [services."Very Important Service"]
 # HTTP endpoint to test.
 http_endpoint = "https://service.example.com"
@@ -8,6 +5,9 @@ http_endpoint = "https://service.example.com"
 email = "service-specific-email@example.org"
 
 [email]
+# List of additional addresses to notify.
+to_addresses = ["example@example.com"]
+
 # Address of SMTP server to send with.
 smtp_address = "smtp.example.com"
 
