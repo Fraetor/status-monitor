@@ -89,8 +89,9 @@ class Emailer:
 
 def check_get(http_endpoint: str) -> bool:
     """Check a HTTP GET request to a given URL succeeds."""
+    headers = {"User-Agent": "status-monitor/1.0 (https://www.frost.cx/)"}
     try:
-        r = requests.get(http_endpoint, timeout=30)
+        r = requests.get(http_endpoint, timeout=30, headers=headers)
     except ConnectionError:
         return False
     return r.status_code == requests.codes.ok
